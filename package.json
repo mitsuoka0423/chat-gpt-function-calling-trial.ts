@@ -1,0 +1,16 @@
+{
+  "name": "chat-gpt-function-calling-trial.ts",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "^0.2.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "openai": "^3.3.0",
+    "tsx": "^3.12.7"
+  },
+  "scripts": {
+    "index.ts": "tsx index.ts"
+  }
+}
