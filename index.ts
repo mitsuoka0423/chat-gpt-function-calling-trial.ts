@@ -14,17 +14,8 @@ const openai = new OpenAIApi(configuration);
 
 const prompt: ChatCompletionRequestMessage = {
   role: "user",
-  content:
-    "くらにゃんの住んでいる国の有名なイベントについて日本語で教えてください。",
+  content: "こんにちは。今日はいい天気ですね。",
 };
-
-const getLivingCountry = (userName: string) => {
-  return userName === "くらにゃん" ? "日本" : "アメリカ";
-};
-
-const functions = {
-  getLivingCountry,
-} as const;
 
 const res = await openai.createChatCompletion({
   model: "gpt-4-0613",
@@ -32,44 +23,28 @@ const res = await openai.createChatCompletion({
   function_call: "auto",
   functions: [
     {
-      name: "getLivingCountry",
-      description: "住んでいる国を取得",
+      name: "generateTextMessage",
+      description: "LINE Messaging APIのテキストメッセージを生成します。",
       parameters: {
         type: "object",
         properties: {
-          name: {
+          type: {
             type: "string",
-            description: "ユーザー名",
+            description: "タイプ。値は`text`固定。",
+          },
+          text: {
+            type: "string",
+            description: "ChatGPTが生成したテキスト",
           },
         },
-        required: ["name"],
+        required: ["type", "text"],
       },
     },
   ],
 });
 
 const message = res.data.choices[0].message;
-console.log("message", message);
-const functionCall = message?.function_call;
+// console.log("message", message);
 
-if (functionCall) {
-  const args = JSON.parse(functionCall.arguments || "{}");
-
-  // @ts-ignore
-  const functionRes = functions[functionCall.name!](args.name);
-
-  // 関数の結果をもとに再度質問
-  const res2 = await openai.createChatCompletion({
-    model: "gpt-4-0613",
-    messages: [
-      prompt,
-      message,
-      {
-        role: "function",
-        content: functionRes,
-        name: functionCall.name,
-      },
-    ],
-  });
-  console.log("answer", res2.data.choices[0].message);
-}
+const textMessage = JSON.parse(message.function_call?.arguments);
+console.log("textMessage", textMessage);
