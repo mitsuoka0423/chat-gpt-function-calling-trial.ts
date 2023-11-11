@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "dotenv": "^16.3.1",
-    "openai": "^3.3.0",
+    "openai": "^4.17.4",
     "tsx": "^3.12.7"
   },
   "scripts": {
